@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { getMetricMetaInfo, timeToString } from '../utils/helpers'
-import Slider from './Slider'
+import Slide from './Slide'
 import Stepper from './Stepper'
 import DateHeader from './DateHeader'
-
+import { Ionicons } from '@expo/vector-icons'
+import TextButton from './TextButton'
 
 function SubmitBtn({ onPress }){
   return (
@@ -81,17 +82,47 @@ export default class AddEntry extends Component {
 
   }
 
+  reset = () => {
+    const key = timeToString();
+
+    //update Redux
+
+    //Route to Home
+
+    //update to db
+
+  }
 
   render(){
 
     const metaInfo = getMetricMetaInfo();
+    if (this.props.alreadyLogged){
+      return (
+        <View>
+          <Ionicons
+            name='ios-happy-outline'
+            size={100}
+            />
+          <Text>
+            You already logged your information for today
+          </Text>
+          <TextButton onPress={this.reset}>
+            <Text>
+              Reset
+            </Text>
+          </TextButton>
+
+        </View>
+      )
+    }
+
+
 
     return(
       <View>
         <DateHeader
           date={(new Date()).toLocaleDateString()}
           />
-        <Text>{JSON.stringify(this.state)}</Text>
         {Object.keys(metaInfo).map(key => {
           const { getIcon, type, ...rest } = metaInfo[key]
           const value = this.state[key]
@@ -100,7 +131,7 @@ export default class AddEntry extends Component {
             <View key={key}>
               {getIcon()}
               {type === 'slider'
-               ? <Slider
+               ? <Slide
                   value={value}
                   onChange={(value) => {
                    this.slide(key, value)
