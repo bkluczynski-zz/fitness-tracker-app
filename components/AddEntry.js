@@ -1,12 +1,15 @@
 import React, {Component} from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
-import { getMetricMetaInfo, timeToString } from '../utils/helpers'
+import { getMetricMetaInfo, timeToString, getDailyReminderValue } from '../utils/helpers'
 import Slide from './Slide'
 import Stepper from './Stepper'
 import DateHeader from './DateHeader'
 import { Ionicons } from '@expo/vector-icons'
 import TextButton from './TextButton'
 import { submitEntry, removeEntry} from '../utils/api'
+import { connect } from 'react-redux'
+import { addEntry }from '../actions'
+
 
 function SubmitBtn({ onPress }){
   return (
@@ -18,7 +21,7 @@ function SubmitBtn({ onPress }){
   )
 }
 
-export default class AddEntry extends Component {
+class AddEntry extends Component {
 
   state = {
     bike: 0,
@@ -72,7 +75,10 @@ export default class AddEntry extends Component {
       sleep: 0,
       eat: 0,
     }))
-    //update Redux
+
+    this.props.dispatch(addEntry({
+      [key]: entry
+    }))
 
     //navigate to Home
 
@@ -87,7 +93,9 @@ export default class AddEntry extends Component {
   reset = () => {
     const key = timeToString();
 
-    //update Redux
+    this.props.dispatch(addEntry({
+      [key]: getDailyReminderValue()
+    }))
 
     //Route to Home
 
@@ -157,3 +165,13 @@ export default class AddEntry extends Component {
     )
   }
 }
+
+function mapStateToProps(state){
+  const key = timeToString()
+  return {
+    alreadyLogged: state[key] && typeof state[key].today === 'undefined'
+  }
+  
+}
+
+export default connect(mapStateToProps)(AddEntry)
