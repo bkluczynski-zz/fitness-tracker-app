@@ -6,6 +6,7 @@ import Stepper from './Stepper'
 import DateHeader from './DateHeader'
 import { Ionicons } from '@expo/vector-icons'
 import TextButton from './TextButton'
+import { submitEntry, removeEntry} from '../utils/helpers'
 
 function SubmitBtn({ onPress }){
   return (
@@ -76,6 +77,7 @@ export default class AddEntry extends Component {
     //navigate to Home
 
     //save it to db
+    submitEntry({key, entry});
 
     //clear the notification
 
@@ -90,6 +92,7 @@ export default class AddEntry extends Component {
     //Route to Home
 
     //update to db
+    removeEntry(key)
 
   }
 
