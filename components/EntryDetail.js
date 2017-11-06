@@ -8,6 +8,7 @@ import { removeEntry } from '../utils/api'
 import { timeToString, getDailyReminderValue } from '../utils/helpers'
 import TextButton from './TextButton'
 
+
 class EntryDetail extends Component{
 
   static navigationOptions = ({ navigation }) => {
