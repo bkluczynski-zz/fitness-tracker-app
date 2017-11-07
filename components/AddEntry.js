@@ -26,6 +26,7 @@ function SubmitBtn({ onPress }){
   )
 }
 
+
 class AddEntry extends Component {
 
   state = {
@@ -35,7 +36,6 @@ class AddEntry extends Component {
     sleep: 0,
     eat: 0,
   }
-
    increment = (metric) => {
 
     const { max, step } = getMetricMetaInfo(metric)
