@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { View, TouchableOpacity, Text, Platform, StyleSheet } from 'react-native'
-import { getMetricMetaInfo, timeToString, getDailyReminderValue } from '../utils/helpers'
+import { getMetricMetaInfo, timeToString, getDailyReminderValue, clearLocalNotification, setLocalNotification } from '../utils/helpers'
 import Slide from './Slide'
 import Stepper from './Stepper'
 import DateHeader from './DateHeader'
@@ -88,6 +88,9 @@ class AddEntry extends Component {
     this.toHome()
     //save it to db
     submitEntry({key, entry});
+
+    clearLocalNotification()
+      .then(setLocalNotification)
 
     //clear the notification
 

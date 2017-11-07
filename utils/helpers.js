@@ -1,8 +1,11 @@
 import React from 'react'
-import  { View, StyleSheet }  from 'react-native'
+import  { View, StyleSheet, AsyncStorage }  from 'react-native'
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { white, red, orange, blue, lightPurp, pink } from './colors'
+import { Notifications, Permissions } from 'expo'
 
+
+const NOTIFICATION_KEY = 'UdaciFitness:notifications'
 
 export function isBetween (num, x, y) {
   if (num >= x && num <= y) {
@@ -168,4 +171,51 @@ export function getDailyReminderValue(){
   return {
     today: "Don't forget to log your data today!"
   }
+}
+
+export function clearLocalNotification () {
+  return AsyncStorage.removeItem(NOTIFICATION_KEY)
+  .then(Notifications.cancelAllScheduledNotificationsAsync()
+)
+}
+
+function createNotification(){
+  return {
+    title: 'Log your stats!',
+    body: "don't forget to log your stats for today!",
+    ios: {
+      sound: true
+    }
+  }
+}
+
+export function setLocalNotification(){
+  AsyncStorage.getItem(NOTIFICATION_KEY)
+    .then(JSON.parse)
+    .then((data) => {
+      if (data === null) {
+        Permissions.askAsync(Permissions.NOTIFICATIONS)
+        .then(({ status }) => {
+          if (status === 'granted') {
+            Notifications.cancelAllScheduledNotificationsAsync()
+
+            let tomorrow = new Date()
+            tomorrow.setDate(tomorrow.getDate() + 1)
+            tomorrow.setHours(20)
+            tomorrow.setMinues(0)
+
+            Notifications.scheduleLocalNotificationAsync(
+              createNotification(),
+              {
+                time: tomorrow,
+                repeat: 'day',
+              }
+            )
+            AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true))
+          }
+        })
+      }
+    })
+
+
 }
